@@ -1,0 +1,148 @@
+<html>
+     <head>
+         <title>RESERVATION</title>
+      <style tyepe="text/css">
+         .seat{
+               width:125px;
+               height:125px;
+               display:inline-block;
+              }
+        </style>
+      <script type="text/javascript">
+         function bookSeat()
+           { 
+             var name=document.getElementById('sname').value;
+             var sid=document.getElementById('sid').value;
+             var seat=document.getElementById('seat'+sid);
+             var sname=localStorage.getItem('seat'+sid);
+             if(sname!=null)
+              {
+                 alert("seat already bookked");
+                    var udata={name:name,seat:sid};
+                    var qdata=localStorage.getItem('queue');
+                    if(qdata==null)
+			{
+				var queue=[];
+			}
+		    else
+			{
+			var queue=JSON.parse(qdata);
+			}
+		queue[queue.length]=udata;
+		var jsondata=JSON.stringify(queue);
+		localStorage.setItem('queue',jsondata);
+		readSeat();
+
+               }
+           else{
+             seat.src="seat_r.png";
+             localStorage.setItem('seat'+sid,name);
+            readSeat();
+            }
+
+   }
+           function readSeat()
+          { 
+            var seat1=localStorage.getItem('seat1');
+            var seat2=localStorage.getItem('seat2');
+            var seat3=localStorage.getItem('seat3');
+            var seat_content=document.getElementById('seat_content');
+            seat_content.innerHTML=seat1+","+seat2+","+seat3;
+
+             if(seat1!=null)
+                 {
+                  var seat=document.getElementById('seat1');
+                  seat.src='seat_r.png';
+                 }
+                 else
+                    {
+                     var seat=document.getElementById('seat1');
+                     seat.src='seat.png';
+                     } 
+              if(seat2!=null)
+                 {
+                  var seat=document.getElementById('seat2');
+                  seat.src='seat_r.png';
+                 }
+                 else
+                    {
+                     var seat=document.getElementById('seat2');
+                     seat.src='seat.png';
+                     }  
+              if(seat3!=null)
+                 {
+                  var seat=document.getElementById('seat3');
+                  seat.src='seat_r.png';
+                 }
+                 else
+                    {
+                     var seat=document.getElementById('seat3');
+                     seat.src='seat.png';
+                     }  
+
+var qdata=localStorage.getItem('queue');
+var queue=JSON.parse(qdata);
+var seat_queue=document.getElementById('seat_queue');
+seat_queue.innerHTML=" ";
+for(var i=0;i<queue.length;i++)
+{
+var qelement=queue[i];
+var uname=qelement['name'];
+var useat=qelement['seat'];
+seat_queue.innerHTML+=uname+'-'+useat+"<br>";
+}
+
+
+          }
+
+            function cancelSeat(sid)
+           {
+           var sname=localStorage.getItem('seat'+sid);
+            if(sname!=null)
+              {
+                 localStorage.removeItem('seat'+sid);
+                  allot(sid);
+                  readSeat();
+                 }
+            }
+
+              function allot(sid)
+               {
+		var qdata=localStorage.getItem('queue');
+		var queue=JSON.parse(qdata);
+		for(var i=0;i<queue.length;i++)
+		{
+		var qitem=queue[i];
+		if(qitem['seat']==sid)
+			{
+			queue.splice(i,1);
+			localStorage.setItem('seat'+sid,qitem['name']);
+			localStorage.setItem('queue',JSON.stringify(queue));
+			break;
+			}
+	        }
+	       }
+
+        </script>
+  <body background="back.jpg" height='100' width='100'>
+   <center>
+     <div id='main'>
+               <div id="seat_area">
+
+              <img src='seat.png' id='seat1' onclick='cancelSeat(1);' class='seat'>
+                                                                                                                                                                                                                                                                                                                                                                                   
+              <img src='seat.png' id='seat2' onclick='cancelSeat(2);' class='seat'>
+              <img src='seat.png' id='seat3' onclick='cancelSeat(3);' class='seat'>
+            </div>
+        </div>
+         <input type='text' id='sname'>
+         <input type='text' id='sid'>
+          <button  type='button' onclick='bookSeat();'>BOOK</button>
+           <div id='seat_content'></div>
+           <div id='seat_queue'></div>
+    </cenetr>
+<script type="text/javascript">
+ readSeat();
+</script>
+  </body>
+</html> 
